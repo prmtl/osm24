@@ -27,7 +27,7 @@ include("language.php");
     <![endif]-->
 
     <script src="js_lang.php?cache=<?php echo $_SESSION['lang'];?>"></script>
-    <script src="http://code.jquery.com/jquery-2.0.2.js">{"parsetags": "explicit"}</script>
+    <script src="//code.jquery.com/jquery-2.0.2.js">{"parsetags": "explicit"}</script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/leaflet.js"></script>
     <script src="js/leaflet.markercluster.js"></script>
