@@ -227,17 +227,6 @@ table, tr, th, td {
   background-image: url(../img/icons/blue.png);
 }
 
-.legend {
-    color: #555;
-    text-align: left;
-}
-.legend i {
-    width: 18px;
-    height: 18px;
-    float: left;
-    opacity: 0.7;
-}
-
 .info {
     padding: 4px;
     background: white;
@@ -379,5 +368,34 @@ table, tr, th, td {
 .language-switcher .flag {
   width: 20px;
   border: 1px solid grey;
+  margin-right: 5px;
+}
+
+
+.legend {
+  padding: 5px;
+  color: #555;
+  text-align: left;
+  background: white;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  opacity: 0.7;
+}
+
+.legend ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend .map-icon {
+  background-size: 18px 18px;
   margin-right: 5px;
 }

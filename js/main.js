@@ -1,7 +1,8 @@
 var url="http://overpass-api.de/api/interpreter?";
 //var url="http://overpass.osm.rambler.ru/cgi/interpreter?";
-var n=false;
 var datan=new Date();
+
+
 (function(i){var e=/iPhone/i,n=/iPod/i,o=/iPad/i,t=/(?=.*\bAndroid\b)(?=.*\bMobile\b)/i,r=/Android/i,d=/BlackBerry/i,s=/Opera Mini/i,a=/IEMobile/i,b=/(?=.*\bFirefox\b)(?=.*\bMobile\b)/i,h=RegExp("(?:Nexus 7|BNTV250|Kindle Fire|Silk|GT-P1000)","i"),c=function(i,e){return i.test(e)},l=function(i){var l=i||navigator.userAgent;this.apple={phone:c(e,l),ipod:c(n,l),tablet:c(o,l),device:c(e,l)||c(n,l)||c(o,l)},this.android={phone:c(t,l),tablet:!c(t,l)&&c(r,l),device:c(t,l)||c(r,l)},this.other={blackberry:c(d,l),opera:c(s,l),windows:c(a,l),firefox:c(b,l),device:c(d,l)||c(s,l)||c(a,l)||c(b,l)},this.seven_inch=c(h,l),this.any=this.apple.device||this.android.device||this.other.device||this.seven_inch},v=i.isMobile=new l;v.Class=l})(window);
 
 
@@ -16,7 +17,7 @@ function addElement(e){
   var marker;
   if(isMobile.any){
     marker=new L.marker(pos, {icon: m_icon,riseOnHover: true}).
-                        bindLabel(poi.getName());
+                        bindTooltip(poi.getName());
     marker.el = poi;
     marker.on("click",function(){
               this.label.close();
@@ -33,7 +34,7 @@ function addElement(e){
 
   }else{
     marker=new L.marker(pos, {icon: m_icon,riseOnHover: true}).
-                        bindLabel(poi.getName()).bindPopup(popup, {minWidth: 350});
+                        bindTooltip(poi.getName()).bindPopup(popup, {minWidth: 350});
     marker.el = poi;
     marker.on("click",function(){
               this.label.close();
@@ -99,7 +100,7 @@ function showNoteMessage(header,body,callback,lon,lat){
          html+='<tr class="'+status+'"><td><a href="http://www.openstreetmap.org/browse/note/'+prop.id+'"  target="_blank">'+prop.id+'</a></td><td>'+badge+prop.status+'</span></td><td>'+prop.comments[0].html+'</a></td>';
          added=1;
        });
-  
+
        html+="</table>";
        if(added==1)
          n.html(html);
@@ -125,7 +126,6 @@ var easyOverpass;
 var nn=0;
 
 function ustaw(){
-  if(!n)return;
   var queryC=new Query({url:url});
   var a=queryC.getQuery(global_menu_data);
   easyOverpass.options.query=a.replace(/(DATATYPE)/g, 'node');
@@ -175,8 +175,6 @@ function onLocationFound(e) {
   location_circle = new L.circle(e.latlng,radius , {color: '#136AEC', fillColor: '#136AEC',fillOpacity: 0.05,  weight: 2, opacity: 0.5,radius: radius*2 })
   map.addLayer(location_circle);
   $("#locate-button").html("<span class=\"glyphicon glyphicon-screenshot\" style=\"color: #FF0000;\"></span>");
-  console.log("aaa");
-  console.log(locate);
   if(locate==0){
     locate=1;
     //map.locate({maxZoom: 16, watch: true, enableHighAccuracy: true, maximumAge: 30000, timeout: 3000000});
@@ -212,7 +210,7 @@ function funcMouseOver() {
 function funcMouseLeave() {
 	var id = $(this).data("id");
 	var layer = markers._featureGroup._layers[id];
-	layer.hideLabel();
+	layer.closeTooltip();
 	layer._resetZIndex();
 }
 
@@ -301,54 +299,72 @@ var nominatimQuery = function (){
   });
 }
 
+
+
 $(window).load(function() {
-$("#export_csv").click(function(){
-  console.log("A");
-  document.location = 'data:Application/csv;charset=utf-8,' +
-                         getCSV();
-});
+  $("#export_csv").click(function(){
+    document.location = 'data:Application/csv;charset=utf-8,' +
+      getCSV();
+  });
 
 
-  map = new L.Map('map',{
+  map = new L.map('map',{
     zoomControl: false,
     contextmenu: true,
-    contextmenuWidth: 140,
+    //contextmenuWidth: 140,
     contextmenuItems: [{
       text: 'Report data',
       callback: report_poi
     }]
   }).setView([51.505, 21], 7);
 
-  var legend = L.control({position: 'bottomright'});
-  legend.onAdd = function (map) {
-    var div = L.DomUtil.create('div', 'info legend');
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Data: <a href="http://www.overpass-api.de/">OverpassAPI</a>',
+    maxZoom: 19,
+    detectRetina: true,
+  }).addTo(map);
 
-    div.innerHTML +='<i class="map-icon-open" style="background-size: 18px 18px;"></i> '+lang_open+' <br/>'+
-    '<i class="map-icon-last" style="background-size: 18px 18px;"></i> '+lang_last_hour+' <br/>'+
-    '<i class="map-icon-closed" style="background-size: 18px 18px;"></i> '+lang_close+' <br/>'+
-    '<i class="map-icon-nd" style="background-size: 18px 18px;"></i> '+lang_nodata+' <br/>';
+  // we want it on different position than default
+  var zoomControl = L.control.zoom({
+    position: 'bottomleft'
+  }).addTo(map);
+
+  var legend = L.control({
+    position: 'bottomright',
+  });
+  legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'map-control legend');
+
+    div.innerHTML = '' +
+      '<ul>' +
+      '<li><i class="map-icon map-icon-open"></i> '+ lang_open +'</li>'+
+      '<li><i class="map-icon map-icon-last"></i> '+ lang_last_hour +' </li>'+
+      '<li><i class="map-icon map-icon-closed"></i> '+ lang_close +' </li>'+
+      '<li><i class="map-icon map-icon-nd"></i> ' + lang_nodata + ' </li>' +
+      '</ul>';
     return div;
   };
   legend.addTo(map);
-  
-  var timeslider = new L.Control.Timeslider({position: 'topright',
-	  callback: dateChanged
+
+  var timeslider = new L.Control.Timeslider({
+    position: 'topright',
+    callback: dateChanged,
   });
   timeslider.addTo(map);
-  
-  var aboutB = L.control({ position: 'topright' });
-  aboutB.onAdd = function (map) {
-      this._div = L.DomUtil.create('div', 'control-bt');
-      this._div.innerHTML = '<button onclick="$(\'#myModal\').modal(\'show\');"><span class="glyphicon glyphicon-info-sign"></span></button>';
-      return this._div;
+
+  var aboutButton = L.control({ position: 'topright' });
+  aboutButton.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'control-bt');
+    this._div.innerHTML = '<button onclick="$(\'#myModal\').modal(\'show\');"><span class="glyphicon glyphicon-info-sign"></span></button>';
+    return this._div;
   };
-  aboutB.addTo(map);
-  
+  aboutButton.addTo(map);
+
   var locateB = L.control({ position: 'topright' });
   locateB.onAdd = function (map) {
-      this._div = L.DomUtil.create('div', 'control-bt');
-      this._div.innerHTML = '<button onclick="locate_toggle()" id="locate-button" type="button"><span class="glyphicon glyphicon-screenshot"></span></button>';
-      return this._div;
+    this._div = L.DomUtil.create('div', 'control-bt');
+    this._div.innerHTML = '<button onclick="locate_toggle()" id="locate-button" type="button"><span class="glyphicon glyphicon-screenshot"></span></button>';
+    return this._div;
   };
   locateB.addTo(map);
 
@@ -359,34 +375,37 @@ $("#export_csv").click(function(){
     return div;
   };
   statusA.addTo(map);
-  
-  var geocoder = new L.Control.NominatimGeocoder({position:"topleft"});
-  map.addControl(geocoder);
+
+  var geocoder = new L.Control.Geocoder({
+    position:"topleft",
+    defaultMarkGeocode: false,
+    geocoder: new L.Control.Geocoder.Nominatim({
+      geocodingQueryParams: {
+        limit: 1,
+      }
+    }),
+  }).on('markgeocode', function(e) {
+      var bbox = e.geocode.bbox;
+      map.fitBounds(bbox);
+  }).addTo(map);
 
   map.on("zoomend", function (e) {
-   if(10>map.getZoom()){
-     $("#info").html(lang_please_zoom_in);
-  }else{
-    if($("#info").html()==lang_please_zoom_in)
-      $("#info").html("");
-  }
+    if(10>map.getZoom()){
+      $("#info").html(lang_please_zoom_in);
+    }else{
+      if($("#info").html()==lang_please_zoom_in)
+        $("#info").html("");
+    }
   });
-var zoomControl = L.control.zoom({
-                    position: 'bottomleft'
-                });
-                map.addControl(zoomControl);
 
 
   if(global_menu_data['type']==="undefined")
-     global_menu_data['type']='all';
+    global_menu_data['type']='all';
   var modal = $('#myModal')
-  //modal.modal('show'); 
+  //modal.modal('show');
   $('#mapper').removeAttr("checked");
 
-  var attrib = 'ODbL OpenStreetMap, Data: <a href="http://www.overpass-api.de/">OverpassAPI</a>';
-  var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, subdomains: 'abc', attribution: attrib,   detectRetina: true});
-
-/*              URL_UPDATE           */
+  /*              URL_UPDATE           */
   map.params_url={};
   map.params_url_updated=function(){
     for(var key in map.params_url){
@@ -406,15 +425,14 @@ var zoomControl = L.control.zoom({
     if(typeof global_menu_data["type"]==='undefined'){
       global_menu_data["type"]="all";
     }
- 
+
     setAll();
     ustaw();
   };
 
-  osm.addTo(map);
-  
+
   var hash = new L.Hash(map,'index.php');
-/*          MENU DATA CHANGED     */
+  /*          MENU DATA CHANGED     */
   global_menu_data_changed=function(){
     map.params_url=[];
     console.log(global_menu_data);
@@ -451,14 +469,14 @@ var zoomControl = L.control.zoom({
   }
 
   easyOverpass = new EasyOverpass({
-    map:map,
+    map: map,
     newElement: addElement,
-    layer:markers,
+    layer: markers,
     autoclick: idd,
     onDownload: function(){$("#info").html(lang_loading);},
     onDownloadFinished: function(){$("#info").html("");reloadList();nominatimQuery();},
-    minzoom:10,
-    minfullzoom:15,
+    minzoom: 10,
+    minfullzoom: 15,
   });
 
   map.params_url_updated();
@@ -467,7 +485,6 @@ var zoomControl = L.control.zoom({
   map.on('locationerror', onLocationError);
 
   map.on('moveend', nominatimQuery);
-  n=true;
 
   if(typeof get_locate != 'undefined')
     map.locate({setView:true,maxZoom: 16, enableHighAccuracy: true, maximumAge: 30000, timeout: 3000000,});
@@ -475,7 +492,6 @@ var zoomControl = L.control.zoom({
 
 
 function locate_toggle(){
-  console.log(locate);
   if(locate==0||locate==3){
     locate=0;
     map.locate({setView:true,maxZoom: 16, enableHighAccuracy: true, maximumAge: 30000, timeout: 3000000,});
@@ -491,7 +507,7 @@ function locate_toggle(){
       map.removeLayer(location_circle);
       delete location_circle;
     }
-    
+
   }
 }
 

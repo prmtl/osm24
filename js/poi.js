@@ -241,6 +241,7 @@ POI.prototype.getIcon = function(){
     className: "map-icon map-icon-"+this.shadow,html:"<div class='map-icon' style='background-image: url(img/icons/"+icon_name+".png);'></div>",
     iconSize: [32, 37],
     iconAnchor: [16, 37],
+    tooltipAnchor: [13, -20],
   });
 };
 

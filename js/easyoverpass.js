@@ -3,6 +3,17 @@
  *-Add data to layer
  */
 
+function debounce(fn, wait) {
+  var timeout;
+  return function() {
+    var ctx = this, args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(function() {
+      fn.apply(ctx, args);
+    }, wait || 100);
+  };
+};
+
 //BBox to string converter
 L.LatLngBounds.prototype.toOverpassBBoxString = function (){
   var a = this._southWest,
@@ -15,7 +26,8 @@ function EasyOverpass(options){
   this.options = options;
   this.jobs = 0;
   this._ids = {};
-  this.options.map.on('moveend', this.onMoveEnd, this);
+  var debouncedOnMoveEnd = debounce(this.onMoveEnd, 500);
+  this.options.map.on('moveend', debouncedOnMoveEnd, this);
 }
 
 //Ways -> Elements
@@ -112,17 +124,17 @@ EasyOverpass.prototype.onMoveEnd = function(){
     return;
   }
 
-  if(this.options.query != ""){
+  if(this.options.query){
     var query_a = this.options.query+out;
-    console.log("Query: "+query_a);
+    console.log("Query nodes: "+query_a);
     query_a = query_a.replace(/(BBOX)/g, this.options.map.getBounds().toOverpassBBoxString());
     this.download(query_a, { instance: this, query: this.options.query }, this.dataDownloadNodes);
   }
 
   if(this.options.minfullzoom <= this.options.map.getZoom()){
-    if(this.options.queryWays!=""){
+    if(this.options.queryWays){
       var query_a=this.options.queryWays+out+'(._;>;);out;';
-      console.log("Query: "+query_a);
+      console.log("Query ways: "+query_a);
       query_a = query_a.replace(/(BBOX)/g, this.options.map.getBounds().toOverpassBBoxString());
       this.download(query_a, { instance: this, query: this.options.queryWays }, this.dataDownloadWays);
     }

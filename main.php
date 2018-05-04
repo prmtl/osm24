@@ -14,32 +14,61 @@ include("language.php");
     <link rel="shortcut icon" href="../../assets/ico/favicon.png">
 
     <title>osm24</title>
+
+    <!-- leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
+      integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+      crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
+      integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
+      crossorigin=""></script>
+
+    <!-- leaflet.markercluster -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css"
+      integrity="sha384-lPzjPsFQL6te2x+VxmV6q1DpRxpRk0tmnl2cpwAO5y04ESyc752tnEWPKDfl1olr"
+      crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css"
+      integrity="sha384-5kMSQJ6S4Qj5i09mtMNrWpSi8iXw230pKU76xTmrpezGnNJQzj0NzXjQLLg+jE7k"
+      crossorigin=""/>
+    <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"
+      integrity="sha384-1artbd0pdGdZ72+IcKWkY1So1xu4Hzygfd0cVLSs7f5lBZZ/FhyEZc4UyQR3DT9c"
+      crossorigin=""></script>
+
+    <!-- leaflet.hash -->
+    <script src="https://unpkg.com/leaflet-hash@0.2.1/leaflet-hash.js"
+      integrity="sha384-2V+X2eD8Nz+G+FVKmPS5XkcMt40qrSGaHSoV8Ny7VAvPnHMfnLgrZ6qvNZVJ2ycb"
+      crossorigin=""></script>
+
+    <!-- leaflet.contextmenu -->
+    <script src="https://unpkg.com/leaflet-contextmenu@1.4.0/dist/leaflet.contextmenu.min.js"
+      integrity="sha384-HuGc9011PwALH2DyQdFp8chJfaHf+eBRYKU/6sgak35LUQTIE6E3S+PCFL1y1b2L"
+      crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-contextmenu@1.4.0/dist/leaflet.contextmenu.min.css"
+      integrity="sha384-npkWn9WNcdcL55STYwFJvl/tXUC+2r6bXKXFDsoQX8zIUe+0QD1vfTMiRrgvhUJv"
+      crossorigin=""/>
+
+    <!-- Control.Geocoder -->
+    <script src="https://unpkg.com/leaflet-control-geocoder@1.5.8/dist/Control.Geocoder.js"
+      integrity="sha384-Om4C0DTbd6YCOdtfYcbPtGQa9/B3WXLY0UvzKqTXl8ZtcJlpUTfoTvfsyRaLEZZA"
+      crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@1.5.8/dist/Control.Geocoder.css"
+      integrity="sha384-EcZdhG68nDVqqAHw1pNCF9oJEni4IP20+ezYKfusdBdJwecDYUXkF8NF/5YgbfxA"
+      crossorigin=""/>
+
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/leaflet.css" />
-    <link rel="stylesheet" href="css/MarkerCluster.css"/>
-    <link rel="stylesheet" href="css/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="css/leaflet.contextmenu.css"/>
-    <link rel="stylesheet" href="css/Control.NominatimGeocoder.css"/>
+    <!-- <link rel="stylesheet" href="css/Control.NominatimGeocoder.css"/> -->
     <link href="css/slider.css" rel="stylesheet">
     <link href="css/datepicker.css" rel="stylesheet">
-    <!--[if lte IE 8]>
-      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
-    <![endif]-->
 
     <script src="js_lang.php?cache=<?php echo $_SESSION['lang'];?>"></script>
     <script src="http://code.jquery.com/jquery-2.0.2.js">{"parsetags": "explicit"}</script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/leaflet.js"></script>
-    <script src="js/leaflet.markercluster.js"></script>
-    <script src="js/leaflet-hash.js"></script>
     <script src="js/leaflet-timeslider.js"></script>
-    <script src="js/Control.NominatimGeocoder.js"></script>
+    <!-- <script src="js/Control.NominatimGeocoder.js"></script> -->
     <script src="js/suncalc.js"></script>
     <script src="js/snap.min.js"></script>
-    <script src="js/leaflet.label.min.js"></script>
     <script src="js/bootstrap-slider.js"></script>
     <script src="js/bootstrap-datepicker.js"></script>
-    <script src="js/leaflet.contextmenu.js"></script>
     <?php
       if(isset($_GET['id'])){
         $id=intval($_GET['id']);
@@ -55,7 +84,6 @@ include("language.php");
     <script src="js/easyoverpass.js"></script>
     <script src="js/opening_hours+deps.min.js"></script>
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/leaflet.label.css" rel="stylesheet">
   </head>
   <body>
   <div class="snap-drawers">
