@@ -1,0 +1,12 @@
+sudo: false
+language: php
+
+php:
+    - 7.0
+
+before_script:
+    - composer install --prefer-dist --no-interaction
+
+script:
+  - ./vendor/bin/phpunit --tap tests/
+  - ./vendor/bin/phpcs --extensions=php --ignore=vendor/ -n -s .
