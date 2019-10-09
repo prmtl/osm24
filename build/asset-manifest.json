@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/osm24/static/css/main.b100e6da.chunk.css",
+    "main.js": "/osm24/static/js/main.ca16238f.chunk.js",
+    "main.js.map": "/osm24/static/js/main.ca16238f.chunk.js.map",
+    "runtime-main.js": "/osm24/static/js/runtime-main.18e4e97c.js",
+    "runtime-main.js.map": "/osm24/static/js/runtime-main.18e4e97c.js.map",
+    "static/js/2.dfb8812b.chunk.js": "/osm24/static/js/2.dfb8812b.chunk.js",
+    "static/js/2.dfb8812b.chunk.js.map": "/osm24/static/js/2.dfb8812b.chunk.js.map",
+    "index.html": "/osm24/index.html",
+    "precache-manifest.97f56d3de3020e235fcf2557bfbbd9d6.js": "/osm24/precache-manifest.97f56d3de3020e235fcf2557bfbbd9d6.js",
+    "service-worker.js": "/osm24/service-worker.js",
+    "static/css/main.b100e6da.chunk.css.map": "/osm24/static/css/main.b100e6da.chunk.css.map",
+    "static/media/logo.svg": "/osm24/static/media/logo.25bf045c.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.18e4e97c.js",
+    "static/js/2.dfb8812b.chunk.js",
+    "static/css/main.b100e6da.chunk.css",
+    "static/js/main.ca16238f.chunk.js"
+  ]
+}
